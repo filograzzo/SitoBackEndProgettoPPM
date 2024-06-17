@@ -15,6 +15,9 @@ def homePageView(request):
 
 
 def register(request):
+    if request.user.is_authenticated:  # reindirizza l'utente se è già autenticato
+        return redirect("")
+
     form = CreateUserForm()
     if request.method == "POST":
         form = CreateUserForm(request.POST)
@@ -27,6 +30,9 @@ def register(request):
 
 
 def my_login(request):
+    if request.user.is_authenticated:  # reindirizza l'utente se è già autenticato
+        return redirect("")
+
     form = LoginForm()
     if request.method == "POST":
         form = LoginForm(request, data=request.POST)
@@ -37,7 +43,7 @@ def my_login(request):
 
             if user is not None:
                 auth.login(request, user)
-                return redirect("dashboard")
+                return redirect("")
     context = {'loginform': form}
     return render(request, 'pages/my-login.html', context=context)
 
@@ -50,3 +56,8 @@ def user_logout(request):
 @login_required(login_url="my-login")
 def dashboard(request):
     return render(request, 'pages/dashboard.html')
+
+
+@login_required(login_url="my-login")
+def my_profile(request):
+    return render(request, 'pages/my-profile.html')

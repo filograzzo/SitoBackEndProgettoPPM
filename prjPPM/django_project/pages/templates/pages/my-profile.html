@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://bootswatch.com/5/journal/bootstrap.min.css">
-    <title>Title</title>
+    <title>Edit Profile</title>
     <style>
         * {
             margin: 0;
@@ -32,8 +32,8 @@
             align-items: center;
         }
 
-        /* Stile per la pagina di login */
-        .login-page {
+        /* Stile per la pagina di modifica del profilo */
+        .profile-page {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -41,8 +41,8 @@
             width: 100%;
         }
 
-        /* Stile per il form di login */
-        .login-form {
+        /* Stile per il form di modifica del profilo */
+        .profile-form {
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -52,7 +52,7 @@
         }
 
         /* Stile per il titolo */
-        .login-form h1 {
+        .profile-form h1 {
             margin-bottom: 20px; /* Aggiungi margine inferiore per separare dal form */
         }
     </style>
@@ -66,13 +66,13 @@
     </nav>
 </header>
 <main>
-    <div class="login-page">
-        <div class="login-form">
-            <h1>Log in now!</h1>
+    <div class="profile-page">
+        <div class="profile-form">
+            <h1>Edit Profile</h1>
             <form method="POST" autocomplete="off">
                 {% csrf_token %}
-                {{loginform.as_p}}
-                <input class="btn btn-primary" type="submit" value="Login"/>
+                {{ ProfileForm.as_p }}
+                <input class="btn btn-primary" type="submit" value="Save Changes"/>
             </form>
         </div>
     </div>

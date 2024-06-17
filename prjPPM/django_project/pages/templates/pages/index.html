@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>This is the homepage</h1>
-</body>
-</html>
+{% extends 'pages/base.html' %}
+
+{% block title %}
+HomePage - Da Nonna Paola
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="hero">
+        <div class="hero-h1">
+            <h1>Benvenuti da Nonna Paola</h1>
+        </div>
+        <div class="hero-p">
+            <p>Scopri nuove idee per ogni occasione</p>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block extra_css %}
+
+/* Hero section */
+.hero {
+  background: url('https://www.cucchiaio.it/content/dam/cucchiaio/it/ricette/2022/10/pollo-agrodolce/pollo-agrodolce-finale.jpg') no-repeat center center/cover;
+  color: white;
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.hero-h1 {
+  font-size: 48px;
+}
+
+.hero-p {
+  font-size: 24px;
+}
+
+{% endblock %}
