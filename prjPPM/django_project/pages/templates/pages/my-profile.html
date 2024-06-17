@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://bootswatch.com/5/journal/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/journal/bootstrap.min.css">
     <style>
         * {
             margin: 0;
@@ -19,6 +20,7 @@
         body {
             display: flex;
             flex-direction: column;
+            justify-content: space-between; /* Ensures main content area fills available space */
         }
 
         header {
@@ -30,38 +32,63 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%; /* Imposta larghezza al 100% per riempire tutto lo spazio disponibile */
+            max-width: 1200px; /* Larghezza massima consentita per il contenuto */
+            margin: 0 auto; /* Centra il main nella pagina */
+            padding: 0 20px; /* Padding per spazio ai lati */
         }
 
-        /* Stile per la pagina di modifica del profilo */
         .profile-page {
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;
-            width: 100%;
+            padding: 20px;
         }
 
-        /* Stile per il form di modifica del profilo */
         .profile-form {
-            padding: 20px;
+            max-width: 700px;
+            width: 100%;
+            padding: 20px 40px; /* Aumenta il padding orizzontale per allargare il box */
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #f9f9f9;
-            text-align: center; /* Centra il testo all'interno del form */
+            text-align: center;
         }
 
-        /* Stile per il titolo */
         .profile-form h1 {
-            margin-bottom: 20px; /* Aggiungi margine inferiore per separare dal form */
+            margin-bottom: 20px;
         }
+
+        .profile-form .profile-picture {
+            max-width: 200px; /* Larghezza massima dell'immagine nel form */
+            border-radius: 50%; /* Forma circolare immagine */
+            margin-bottom: 20px;
+            cursor: pointer; /* Cambia il cursore quando si passa sopra per indicare la possibilità di cliccare */
+            transition: transform 0.3s ease; /* Transizione per effetto di hover */
+        }
+
+        .profile-form .profile-picture:hover {
+            transform: scale(1.1); /* Ingrandisce l'immagine del 10% al passaggio del mouse */
+        }
+
+        .btn-primary, .btn-light {
+            margin-top: 20px;
+        }
+
+        .btn-light{
+            border: 1px solid black;
+        }
+
+
     </style>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-        <div class="container-fluid" style="justify-content: center;">
-            <a class="navbar-brand" href="#" style="font-size: 24px; text-align: center;">DA NONNA PAOLA</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">DA NONNA PAOLA</a>
         </div>
     </nav>
 </header>
@@ -69,10 +96,21 @@
     <div class="profile-page">
         <div class="profile-form">
             <h1>Edit Profile</h1>
-            <form method="POST" autocomplete="off">
+            {% load static %}
+
+            {% if request.user.profile_picture %}
+                <a href="{{ request.user.profile_picture.url }}" target="_blank">
+                    <img class="profile-picture" src="{{ request.user.profile_picture.url }}" alt="Profile Picture">
+                </a>
+            {% else %}
+                <p>No profile picture uploaded yet.</p>
+            {% endif %}
+
+            <form method="POST" autocomplete="off" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ ProfileForm.as_p }}
-                <input class="btn btn-primary" type="submit" value="Save Changes"/>
+                {{ form.as_p }}
+                <input class="btn btn-primary" type="submit" value="Save Changes">
+                <a type="button" class="btn btn-light" href="/">Home</a>
             </form>
         </div>
     </div>

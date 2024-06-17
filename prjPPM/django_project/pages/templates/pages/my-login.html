@@ -69,6 +69,13 @@
     <div class="login-page">
         <div class="login-form">
             <h1>Log in now!</h1>
+            {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
             <form method="POST" autocomplete="off">
                 {% csrf_token %}
                 {{loginform.as_p}}
