@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import CreateUserForm, LoginForm, UpdateProfileForm
+from .forms import CreateUserForm, LoginForm, UpdateProfileForm, RecipeCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -7,8 +7,6 @@ from django.contrib import messages
 
 from django.contrib.auth.models import auth
 from django.contrib.auth import authenticate, login, logout
-
-
 
 
 def homePageView(request):
@@ -67,7 +65,7 @@ def dashboard(request):
 @login_required
 def my_profile(request):
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, request.FILES,  instance=request.user)
+        form = UpdateProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("my-profile")
@@ -75,3 +73,19 @@ def my_profile(request):
         form = UpdateProfileForm(instance=request.user)
     return render(request, 'pages/my-profile.html', {'form': form})
 
+
+@login_required
+def recipe_creation(request):
+    if request.method == 'POST':
+        form = RecipeCreateForm(request.POST, request.FILES)  # Passa anche request.FILES per gestire l'upload dell'immagine
+        if form.is_valid():
+            new_recipe = form.save(commit=False)
+            new_recipe.user = request.user
+            new_recipe.save()
+            return redirect('pages/my-profile')  # Reindirizza a una view dopo il salvataggio della ricetta
+    else:
+        form = RecipeCreateForm()
+
+    context = {'form': form}
+    template = 'pages/recipe-creation.html'
+    return render(request, template, context)

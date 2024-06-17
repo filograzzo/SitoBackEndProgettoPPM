@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
 from django import forms
 from django.forms.widgets import PasswordInput, TextInput
 from django.contrib.auth import get_user_model
+from .models import Recipe
 
 CustomUser = get_user_model()
 
@@ -23,10 +23,11 @@ class CreateUserForm(UserCreationForm):
 class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['profile_picture', 'first_name', 'last_name', 'email', 'bio' ]
+        fields = ['profile_picture', 'first_name', 'last_name', 'email', 'bio']
         widgets = {
-            'bio': forms.Textarea(attrs={'placeholder': 'Inserisci la tua bio', 'class':'bio-textarea'}),
+            'bio': forms.Textarea(attrs={'placeholder': 'Inserisci la tua bio', 'class': 'bio-textarea'}),
         }
+
 
 # - Authenticate a user (Model form)
 
@@ -35,3 +36,35 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget=PasswordInput())
 
 
+# - Creare una ricetta
+
+class RecipeCreateForm(forms.ModelForm):
+    class Meta:
+        model = Recipe
+        fields = ['title', 'image', 'description', 'ingredients', 'preparation']
+        widgets = {
+            'title': forms.Textarea(attrs={
+                'placeholder': 'Inserisci il titolo',
+                'class': 'textarea',
+                'rows': 1,
+                'cols': 40
+            }),
+            'description': forms.Textarea(attrs={
+                'placeholder': 'Inserisci la descrizione',
+                'class': 'textarea',
+                'rows': 2,
+                'cols': 40
+            }),
+            'ingredients': forms.Textarea(attrs={
+                'placeholder': 'Inserisci gli ingredienti',
+                'class': 'textarea',
+                'rows': 2,
+                'cols': 40
+            }),
+            'preparation': forms.Textarea(attrs={
+                'placeholder': 'Inserisci la preparazione',
+                'class': 'textarea',
+                'rows': 2,
+                'cols': 40
+            }),
+        }
