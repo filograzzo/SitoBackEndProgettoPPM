@@ -55,13 +55,16 @@
         .login-form h1 {
             margin-bottom: 20px; /* Aggiungi margine inferiore per separare dal form */
         }
+        .btn-light{
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
 <header>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-        <div class="container-fluid" style="justify-content: center;">
-            <a class="navbar-brand" href="#" style="font-size: 24px; text-align: center;">DA NONNA PAOLA</a>
+        <div class="container-fluid" >
+            <a class="navbar-brand" href="/" style="font-size: 24px; text-align: center; margin-left:10%;">DA NONNA PAOLA</a>
         </div>
     </nav>
 </header>
@@ -80,6 +83,7 @@
                 {% csrf_token %}
                 {{loginform.as_p}}
                 <input class="btn btn-primary" type="submit" value="Login"/>
+                <a type="button" class="btn btn-light" href="/">Home</a>
             </form>
         </div>
     </div>

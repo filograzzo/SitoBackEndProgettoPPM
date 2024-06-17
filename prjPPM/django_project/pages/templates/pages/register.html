@@ -88,13 +88,17 @@
         .register-form input[type="submit"]:hover {
             background-color: #0056b3; /* Cambia il colore di sfondo del pulsante al passaggio del mouse */
         }
+        .btn-light{
+            margin-top:20px;
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-            <div class="container-fluid" style="justify-content:center;">
-                <a class="navbar-brand" href="#" style="font-size: 24px; text-align: center;">DA NONNA PAOLA</a>
+            <div class="container-fluid" >
+                <a class="navbar-brand" href="/" style="font-size: 24px; text-align: center; margin-left:10%;">DA NONNA PAOLA</a>
             </div>
         </nav>
     </header>
@@ -106,6 +110,8 @@
                 {% csrf_token %}
                 {{ registerform.as_p }}
                 <input style="background-color: #EB6864;" type="submit" value="Register"/>
+                <a type="button" class="btn btn-light" href="/">Home</a>
+
             </form>
         </div>
     </main>
