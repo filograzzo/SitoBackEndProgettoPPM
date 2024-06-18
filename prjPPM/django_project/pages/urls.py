@@ -11,6 +11,8 @@ urlpatterns = [
     path("user-logout", views.user_logout, name="user-logout"),
     path("my-profile", views.my_profile, name="my-profile"),
     path("recipe-creation", views.recipe_creation, name="recipe-creation"),
+    path('delete-recipe/<int:recipe_id>/', views.delete_recipe, name='delete_recipe'),
+    path('edit-recipe/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
 ]
 
 if settings.DEBUG:

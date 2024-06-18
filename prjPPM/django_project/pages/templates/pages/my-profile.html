@@ -20,7 +20,7 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Ensures main content area fills available space */
+            justify-content: space-between;
         }
 
         header {
@@ -29,13 +29,12 @@
 
         main {
             flex: 1;
-            display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%; /* Imposta larghezza al 100% per riempire tutto lo spazio disponibile */
-            max-width: 1200px; /* Larghezza massima consentita per il contenuto */
-            margin: 0 auto; /* Centra il main nella pagina */
-            padding: 0 20px; /* Padding per spazio ai lati */
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .profile-page {
@@ -49,7 +48,7 @@
         .profile-form {
             max-width: 700px;
             width: 100%;
-            padding: 20px 40px; /* Aumenta il padding orizzontale per allargare il box */
+            padding: 20px 40px;
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -62,27 +61,37 @@
         }
 
         .profile-form .profile-picture {
-            max-width: 200px; /* Larghezza massima dell'immagine nel form */
-            border-radius: 50%; /* Forma circolare immagine */
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
             margin-bottom: 20px;
-            cursor: pointer; /* Cambia il cursore quando si passa sopra per indicare la possibilità di cliccare */
-            transition: transform 0.3s ease; /* Transizione per effetto di hover */
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
         .profile-form .profile-picture:hover {
-            transform: scale(1.1); /* Ingrandisce l'immagine del 10% al passaggio del mouse */
+            transform: scale(1.1);
         }
 
-        .btn-primary {
+        .btn-primary, .btn-danger {
             margin-top: 20px;
         }
 
-        .btn-light{
-            margin-top:20px;
+        .btn-light {
+            margin-top: 20px;
             border: 1px solid black;
         }
 
+        .card {
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
 
+        .profile-class {
+            display: flex;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -101,20 +110,88 @@
 
             {% if request.user.profile_picture %}
                 <a href="{{ request.user.profile_picture.url }}" target="_blank">
-                    <img class="profile-picture" src="{{ request.user.profile_picture.url }}" alt="Profile Picture">
+                    <img id="current-profile-picture" class="profile-picture" src="{{ request.user.profile_picture.url }}" alt="Profile Picture">
                 </a>
             {% else %}
                 <p>No profile picture uploaded yet.</p>
             {% endif %}
 
+            <div class="profile-class">
+                <img id="preview-profile-picture" class="profile-picture" style="display:none;" alt="Profile Picture Preview">
+            </div>
+
             <form method="POST" autocomplete="off" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <input id="id_profile_picture" type="file" name="profile_picture">
                 <input class="btn btn-primary" type="submit" value="Save Changes">
                 <a type="button" class="btn btn-light" href="/">Home</a>
             </form>
         </div>
     </div>
+
+    <div class="recipes-section" style="margin-bottom:30px;">
+        <h2 class="mb-4">Le mie ricette</h2>
+        <a class="btn btn-primary mb-4" href="{% url 'recipe-creation' %}">Crea una ricetta</a>
+
+        {% if request.user.recipes_created.all %}
+            <div class="row row-cols-1 g-4">
+                {% for recipe in request.user.recipes_created.all %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="{{ recipe.image.url }}" class="img-fluid rounded-start" alt="{{ recipe.title }}">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ recipe.title }}</5>
+                                        <p class="card-text">Tempo di preparazione: {{ recipe.preparation_time }} minuti</p>
+                                        <h6 class="mt-4">Ingredienti:</h6>
+                                        <p>{{ recipe.ingredients }}</p>
+                                        <h6>Descrizione:</h6>
+                                        <p>{{ recipe.description }}</p>
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}">Modifica</a>
+                                            <form method="POST" action="{% url 'delete_recipe' recipe.id %}">
+                                                {% csrf_token %}
+                                                <input class="btn btn-danger" type="submit" value="Elimina">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mt-4">Non hai ancora creato nessuna ricetta.</p>
+        {% endif %}
+    </div>
+
 </main>
+<script>
+    document.getElementById('id_profile_picture').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('preview-profile-picture');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+
+                const current = document.getElementById('current-profile-picture');
+                if (current) {
+                    preview.style.width = current.clientWidth + 'px';
+                    preview.style.height = current.clientHeight + 'px';
+                    current.style.display = 'none';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+
 </body>
 </html>

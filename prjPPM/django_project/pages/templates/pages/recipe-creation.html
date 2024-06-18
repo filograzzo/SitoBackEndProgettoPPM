@@ -32,7 +32,6 @@
             align-items: center;
         }
 
-        /* Stile per il form di creazione della ricetta */
         .recipe-form {
             padding: 20px;
             border: 1px solid #ccc;
@@ -59,12 +58,12 @@
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            height: auto; /* Rimuove l'altezza predefinita */
-            overflow-y: hidden; /* Nasconde la barra di scorrimento verticale */
+            height: auto;
+            overflow-y: hidden;
         }
 
         .recipe-form textarea {
-            resize: none; /* Disabilita il ridimensionamento manuale */
+            resize: none;
         }
 
         .recipe-form button[type="submit"] {
@@ -91,30 +90,36 @@
         .image-preview {
     display: flex;
     justify-content: center;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
-.img-image-preview {
-    width: 30%;
-    height: auto;
-    display: flex; /* aggiunto */
-    justify-content: center; /* aggiunto */
+#preview-container {
+    width: 200px; /* dimensione desiderata */
+    height: 200px; /* dimensione desiderata */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* centra verticalmente */
+    overflow: hidden; /* nasconde parti dell'immagine che superano le dimensioni specificate */
+    border-radius: 5px;
+    border: 1px solid #ccc; /* aggiunto un bordo per migliorare la visibilità */
+    margin-top: 5px; /* spazio sopra l'anteprima */
 }
 
-.image-preview img {
+#preview-container img {
     width: 100%;
-    display: block; /* per centrare correttamente l'immagine */
-    margin: 0 auto; /* per centrare correttamente l'immagine */
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
+
 
         .file-input-container {
-    width: 30%; /* Larghezza equivalente a .img-image-preview */
-    margin: 0 auto; /* Centra l'input orizzontalmente */
-    text-align: center; /* Centra l'input all'interno del suo contenitore */
-    margin-top: 10px; /* Aggiunto margine superiore per separazione dall'anteprima */
-    margin-bottom:10px;
-}
-
+            width: 30%;
+            margin: 0 auto;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -130,16 +135,12 @@
         <div class="recipe-form">
             <h1>Crea una nuova ricetta</h1>
             <form method="POST" enctype="multipart/form-data" action="{% url 'recipe-creation' %}">
-                <label for="id_image" class="form-label">Seleziona un'immagine:</label>
-                <div class="image-preview">
-                    <div class="img-image-preview">
-                        <img  id="image-preview" src="#" alt="Image Preview" style="max-width: 100%; margin-top: 20px; display: none;">
+                <div id="image-preview-container" class="image-preview" style="display:none;">
+                    <div id="preview-container">
+                        <img id="image-preview" src="#" alt="Preview dell'immagine" >
                     </div>
                 </div>
-
-            <div class="file-input-container">
-                <input type="file" id="id_image" name="image" accept="image/*" onchange="previewImage(event)" class="file-input">
-            </div>                {% csrf_token %}
+                {% csrf_token %}
                 {{ form.as_p }}
                 <input class="btn btn-primary" type="submit" value="Add recipe"/>
                 <a type="button" class="btn btn-light" href="/">Home</a>
@@ -148,31 +149,23 @@
     </div>
 </main>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const textareas = document.querySelectorAll('textarea');
-        textareas.forEach(textarea => {
-            textarea.setAttribute('style', 'height:' + (textarea.scrollHeight) + 'px;overflow-y:hidden;');
-            textarea.addEventListener('input', autoResize, false);
-        });
+// Funzione per mostrare la preview dell'immagine
+function previewImage(event) {
+    var imageElement = document.getElementById('image-preview');
+    var imageContainer=document.getElementById('image-preview-container');
+    if (event.target.files.length > 0) {
+        imageContainer.style.display = 'flex';
+        imageElement.src = URL.createObjectURL(event.target.files[0]);
+    } else {
+        imageContainer.style.display = 'none';
+        imageElement.src = '#'; // Reset dell'immagine
+    }
+}
 
-        function autoResize() {
-            this.style.height = 'auto';
-            this.style.height = (this.scrollHeight) + 'px';
-        }
-    });
-
-    function previewImage(event) {
-        const input = event.target;
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('image-preview');
-                preview.src = e.target.result;
-                preview.style.display = 'flex';  // Mostra l'anteprima dell'immagine
-            }
-            reader.readAsDataURL(input.files[0]);  // Leggi il file come URL dati
-        }
-    };
+// Aggiungi un ascoltatore di eventi al campo di input dell'immagine
+document.getElementById('id_image').addEventListener('change', previewImage);
 </script>
+
+
 </body>
 </html>

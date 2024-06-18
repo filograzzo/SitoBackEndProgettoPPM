@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CreateUserForm, LoginForm, UpdateProfileForm, RecipeCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .models import Recipe
 
 # - Authentcation models and functions
 
@@ -82,10 +83,56 @@ def recipe_creation(request):
             new_recipe = form.save(commit=False)
             new_recipe.user = request.user
             new_recipe.save()
-            return redirect('pages/my-profile')  # Reindirizza a una view dopo il salvataggio della ricetta
+            return redirect('my-profile')  # Reindirizza a una view dopo il salvataggio della ricetta
     else:
         form = RecipeCreateForm()
 
     context = {'form': form}
     template = 'pages/recipe-creation.html'
     return render(request, template, context)
+
+
+
+@login_required
+def delete_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+
+    # Verifica se l'utente che sta cercando di eliminare la ricetta è anche il creatore della ricetta
+    if request.user == recipe.user:
+        if request.method == 'POST':
+            recipe.delete()
+            return redirect('my-profile')  # Reindirizza dopo l'eliminazione della ricetta
+
+        # Se non è una richiesta POST, potresti anche gestire un altro comportamento (ad esempio un messaggio di errore)
+        # Ma normalmente non dovrebbe accadere se il form è correttamente configurato
+        return redirect('my-profile')
+    else:
+        # Se l'utente non è autorizzato, puoi reindirizzarlo o mostrare un messaggio di errore
+        # In questo caso, reindirizziamo alla pagina di profilo
+        return redirect('my-profile')
+
+
+@login_required
+def edit_recipe(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+
+    # Verifica se l'utente che sta cercando di modificare la ricetta è anche il creatore della ricetta
+    if request.user == recipe.user:
+        if request.method == 'POST':
+            form = RecipeCreateForm(request.POST, request.FILES, instance=recipe)
+            if form.is_valid():
+                form.save()
+                return redirect('my-profile')  # Reindirizza dopo la modifica della ricetta
+        else:
+            form = RecipeCreateForm(instance=recipe)
+
+        # Passa il form al template per visualizzare il form di modifica
+        context = {
+            'form': form,
+            'recipe': recipe,
+        }
+        return render(request, 'pages/edit-recipe.html', context)
+    else:
+        # Se l'utente non è autorizzato, puoi reindirizzarlo o mostrare un messaggio di errore
+        # In questo caso, reindirizziamo alla pagina di profilo
+        return redirect('my-profile')
