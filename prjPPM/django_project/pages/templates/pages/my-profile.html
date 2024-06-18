@@ -92,6 +92,14 @@
             display: flex;
             justify-content: center;
         }
+
+        .profile-picture-container {
+            height: 100%; /* Altezza massima per occupare tutto lo spazio disponibile */
+            display: flex;
+            justify-content: center; /* Centra orizzontalmente */
+            /*align-items: center;  Centra verticalmente */
+            margin-top:0px;
+        }
     </style>
 </head>
 <body>
@@ -140,12 +148,14 @@
                     <div class="col">
                         <div class="card">
                             <div class="row g-0">
-                                <div class="col-md-4">
-                                    <img src="{{ recipe.image.url }}" class="img-fluid rounded-start" alt="{{ recipe.title }}">
+                                <div class="col-md-4" >
+                                    <div class="profile-picture-container d-flex justify-content-center align-items-center">
+                                        <img src="{{ recipe.image.url }}" class="img-fluid rounded-start" alt="{{ recipe.title }}">
+                                    </div>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ recipe.title }}</5>
+                                        <h5 class="card-title">{{ recipe.title }}</h5>
                                         <p class="card-text">Tempo di preparazione: {{ recipe.preparation_time }} minuti</p>
                                         <h6 class="mt-4">Ingredienti:</h6>
                                         <p>{{ recipe.ingredients }}</p>
@@ -155,7 +165,7 @@
                                             <a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}">Modifica</a>
                                             <form method="POST" action="{% url 'delete_recipe' recipe.id %}">
                                                 {% csrf_token %}
-                                                <input class="btn btn-danger" type="submit" value="Elimina">
+                                                <input class="btn btn-danger" type="submit" value="Elimina" style="border-top-left-radius:0; border-bottom-left-radius:0;">
                                             </form>
                                         </div>
                                     </div>
