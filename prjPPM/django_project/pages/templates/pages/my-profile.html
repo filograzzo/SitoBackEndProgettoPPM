@@ -100,6 +100,10 @@
             /*align-items: center;  Centra verticalmente */
             margin-top:0px;
         }
+        .recipe-image {
+    width: 75%; /* Occupa tutta la larghezza disponibile */
+    height: auto; /* Altezza fissa, puoi modificare il valore a tuo piacimento */
+}
     </style>
 </head>
 <body>
@@ -150,17 +154,19 @@
                             <div class="row g-0">
                                 <div class="col-md-4" >
                                     <div class="profile-picture-container d-flex justify-content-center align-items-center">
-                                        <img src="{{ recipe.image.url }}" class="img-fluid rounded-start" alt="{{ recipe.title }}">
+                                        <img src="{{ recipe.image.url }}" class="img-fluid rounded-start recipe-image" alt="{{ recipe.title }}">
                                     </div>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ recipe.title }}</h5>
                                         <p class="card-text">Tempo di preparazione: {{ recipe.preparation_time }} minuti</p>
-                                        <h6 class="mt-4">Ingredienti:</h6>
-                                        <p>{{ recipe.ingredients }}</p>
                                         <h6>Descrizione:</h6>
                                         <p>{{ recipe.description }}</p>
+                                        <h6 class="mt-4">Ingredienti:</h6>
+                                        <p>{{ recipe.ingredients }}</p>
+                                        <h6 class="mt-4">Preparazione:</h6>
+                                        <p>{{ recipe.preparation }}</p>
                                         <div class="btn-group" role="group">
                                             <a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}">Modifica</a>
                                             <form method="POST" action="{% url 'delete_recipe' recipe.id %}">
