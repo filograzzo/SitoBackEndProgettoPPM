@@ -135,7 +135,6 @@
             <form method="POST" autocomplete="off" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input id="id_profile_picture" type="file" name="profile_picture">
                 <input class="btn btn-primary" type="submit" value="Save Changes">
                 <a type="button" class="btn btn-light" href="/">Home</a>
             </form>
@@ -161,6 +160,7 @@
                                     <div class="card-body">
                                         <h5 class="card-title">{{ recipe.title }}</h5>
                                         <p class="card-text">Tempo di preparazione: {{ recipe.preparation_time }} minuti</p>
+                                        <p class="card-text"><strong>Categoria:</strong> {{ recipe.get_category_display }}</p>
                                         <h6>Descrizione:</h6>
                                         <p>{{ recipe.description }}</p>
                                         <h6 class="mt-4">Ingredienti:</h6>
