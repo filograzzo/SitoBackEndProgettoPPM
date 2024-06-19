@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+
 from .forms import CreateUserForm, LoginForm, UpdateProfileForm, RecipeCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -112,6 +114,7 @@ def user_profile(request, user_id):
     recipes = Recipe.objects.filter(user=user)
     return render(request, 'pages/user-profile.html', {'user': user, 'recipes': recipes})
 
+
 @login_required
 def recipe_creation(request):
     if request.method == 'POST':
@@ -176,9 +179,10 @@ def edit_recipe(request, recipe_id):
 
 
 @login_required
+@csrf_exempt
 def like_recipe(request, recipe_id):
     if request.method == 'POST':
-        recipe = Recipe.objects.get(id=recipe_id)
+        recipe = get_object_or_404(Recipe, id=recipe_id)
         if request.user in recipe.likes.all():
             recipe.likes.remove(request.user)
             liked = False
@@ -186,7 +190,7 @@ def like_recipe(request, recipe_id):
             recipe.likes.add(request.user)
             liked = True
         return JsonResponse({'success': True, 'liked': liked})
-    return JsonResponse({'success': False})
+    return JsonResponse({'success': False}, status=400)
 
 
 @login_required

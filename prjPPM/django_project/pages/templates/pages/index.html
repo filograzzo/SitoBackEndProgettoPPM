@@ -185,6 +185,7 @@ footer .social-media img {
 
     .nome-utente a:hover {
     text-decoration:underline;
+        background-color: #e6e7e8; !important
     }
 
 
@@ -194,14 +195,14 @@ footer .social-media img {
 <header>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">DA NONNA PAOLA</a>
+    <a class="navbar-brand" href="/">DA NONNA PAOLA</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link active" href="#">Home
+          <a class="nav-link active" href="/">Home
             <span class="visually-hidden">(current)</span>
           </a>
         </li>
@@ -292,8 +293,8 @@ footer .social-media img {
                                     <p>{{ recipe.preparation }}</p>
                                     <div class="author-name d-flex align-items-center">
                                     <div class="nome-utente" style="transform: translateY(+5%); position: relative;">
-    Autore: <a href="{% url 'user-profile' user_id=recipe.user.id %}" class="text-dark">{{ recipe.user.username }}</a>
-</div>
+                                        Autore: <a href="{% url 'user-profile' user_id=recipe.user.id %}" class="text-dark">{{ recipe.user.username }}</a>
+                                    </div>
                                          <button class="follow-button btn btn-outline-primary ms-2" data-user-id="{{ recipe.user.id }}" data-author-id="{{ recipe.user.id }}">
                                             {% if request.user in recipe.user.followers.all %}
                                                 <i class="fas fa-check"></i>
