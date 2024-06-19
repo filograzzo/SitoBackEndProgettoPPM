@@ -204,10 +204,10 @@
                     </li>
                     {% if user.is_authenticated and not request.GET.q and not request.GET.category %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/my-likes">My likes</a>
+                        <a class="nav-link" href="/my-likes">I miei mi piace</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/friends">Friends</a>
+                        <a class="nav-link" href="/friends">Amici</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -253,16 +253,16 @@
             <h1>Tutte le ricette</h1>
             {% endif %}
             <form class="d-flex" method="GET" action="{% url 'recipe_search' %}">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="q" value="{{ request.GET.q }}">
+                <input class="form-control me-2" type="search" placeholder="Cerca" aria-label="Search" name="q" value="{{ request.GET.q }}">
                 <select class="form-select me-2" name="category">
                     <option value="">Tutte le categorie</option>
                     <option value="ANTIPASTI">Antipasti</option>
                     <option value="PRIMI">Primi</option>
                     <option value="SECONDI">Secondi</option>
                     <option value="DOLCI">Dolci</option>
-                    <option value="Più likes">Più likes</option>
+                    <option value="Più likes">Più apprezzati</option>
                 </select>
-                <button class="btn btn-outline-primary" type="submit">Search</button>
+                <button class="btn btn-outline-primary" type="submit">Cerca</button>
             </form>
         </div>
         {% if recipes %}
@@ -288,18 +288,18 @@
                                         {% endif %}
                                     </button>
                                 </div>
-                                <p class="card-text">Tempo di preparazione: {{ recipe.preparation_time }} minuti</p>
+                                <p class="card-text"><strong>Tempo di preparazione:</strong> {{ recipe.preparation_time }} minuti</p>
                                 <p class="card-text"><strong>Categoria:</strong> {{ recipe.get_category_display }}</p>
-                                <p class="card-text"><strong>Likes:</strong> <span class="num-likes">{{ recipe.num_likes }}</span></p>
-                                <h6>Descrizione:</h6>
+                                <p class="card-text"><strong>Mi piace:</strong> <span class="num-likes">{{ recipe.num_likes }}</span></p>
+                                <p><strong>Descrizione:</strong></p>
                                 <p>{{ recipe.description }}</p>
-                                <h6 class="mt-4">Ingredienti:</h6>
+                                <p><strong>Ingredienti:</strong></p>
                                 <p>{{ recipe.ingredients }}</p>
-                                <h6 class="mt-4">Preparazione:</h6>
+                                <p><strong>Preparazione:</strong></p>
                                 <p>{{ recipe.preparation }}</p>
                                 <div class="author-name d-flex align-items-center">
                                     <div class="nome-utente" style="transform: translateY(+5%); position: relative;">
-                                        Autore: <a href="{% url 'user-profile' user_id=recipe.user.id %}" class="text-dark">{{ recipe.user.username }}</a>
+                                        <strong>Autore:</strong> <a href="{% url 'user-profile' user_id=recipe.user.id %}" class="text-dark">{{ recipe.user.username }}</a>
                                     </div>
                                     <button class="follow-button btn btn-outline-primary ms-2" data-user-id="{{ recipe.user.id }}" data-author-id="{{ recipe.user.id }}">
                                         {% if request.user in recipe.user.followers.all %}
