@@ -16,6 +16,8 @@ urlpatterns = [
     path('like-recipe/<int:recipe_id>/', views.like_recipe, name='like-recipe'),
     path('search/', views.recipe_search, name='recipe_search'),
     path('my-likes/', views.LikedRecipes.as_view(), name='my-likes'),
+    path('friends/', views.friends_list, name='friends_list'),
+    path('follow-user/<int:user_id>/', views.follow_user, name='follow_user'),
 ]
 
 if settings.DEBUG:

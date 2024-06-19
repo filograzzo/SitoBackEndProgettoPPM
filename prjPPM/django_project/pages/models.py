@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, User
+from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 
@@ -7,6 +7,7 @@ from django.conf import settings
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    friends = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
 
 # - Modello per la creazione di una ricetta

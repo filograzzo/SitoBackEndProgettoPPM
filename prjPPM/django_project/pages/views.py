@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CreateUserForm, LoginForm, UpdateProfileForm, RecipeCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Recipe
+from .models import Recipe, CustomUser
 from django.views.generic import ListView
 
 # - Authentcation models and functions
@@ -78,6 +78,15 @@ class LikedRecipes(ListView):
 
     def get_queryset(self):
         return Recipe.objects.filter(likes=self.request.user)
+
+
+def recipe_search(request):
+    query = request.GET.get('q')
+    if query:
+        recipes = Recipe.objects.filter(title__icontains=query)
+    else:
+        recipes = Recipe.objects.all()
+    return render(request, 'pages/index.html', {'recipes': recipes})
 
 
 @login_required(login_url="my-login")
@@ -160,15 +169,6 @@ def edit_recipe(request, recipe_id):
         return redirect('my-profile')
 
 
-def recipe_search(request):
-    query = request.GET.get('q')
-    if query:
-        recipes = Recipe.objects.filter(title__icontains=query)
-    else:
-        recipes = Recipe.objects.all()
-    return render(request, 'pages/index.html', {'recipes': recipes})
-
-
 @login_required
 def like_recipe(request, recipe_id):
     if request.method == 'POST':
@@ -181,3 +181,22 @@ def like_recipe(request, recipe_id):
             liked = True
         return JsonResponse({'success': True, 'liked': liked})
     return JsonResponse({'success': False})
+
+
+@login_required
+def friends_list(request):
+    user = request.user
+    friends = user.friends.all()
+    return render(request, 'pages/friends.html', {'friends': friends})
+
+
+@login_required
+def follow_user(request, user_id):
+    user_to_follow = get_object_or_404(CustomUser, id=user_id)
+    if request.user in user_to_follow.followers.all():
+        user_to_follow.followers.remove(request.user)
+        is_following = False
+    else:
+        user_to_follow.followers.add(request.user)
+        is_following = True
+    return JsonResponse({'success': True, 'is_following': is_following})
