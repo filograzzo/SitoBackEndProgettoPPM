@@ -38,8 +38,6 @@
             padding: 0 20px;
         }
 
-
-
         .btn-primary, .btn-danger {
             margin-top: 20px;
         }
@@ -59,55 +57,57 @@
         }
 
         .profile-picture-container {
-            height: 100%; /* Altezza massima per occupare tutto lo spazio disponibile */
+            height: 100%;
             display: flex;
-            justify-content: center; /* Centra orizzontalmente */
-            /*align-items: center;  Centra verticalmente */
-            margin-top:0px;
+            justify-content: center;
+            margin-top: 0px;
         }
+
         .recipe-image {
-    width: 75%; /* Occupa tutta la larghezza disponibile */
-    height: auto; /* Altezza fissa, puoi modificare il valore a tuo piacimento */
-}
+            width: 75%;
+            height: auto;
+        }
+
         .like-button {
-  background: none;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
 
-.like-button .fas.fa-heart {
-  color: red;
-}
+        .like-button .fas.fa-heart {
+            color: red;
+        }
 
-.like-button .far.fa-heart {
-  color: grey;
-}
+        .like-button .far.fa-heart {
+            color: grey;
+        }
 
-.like-button .fas.fa-heart,
-.like-button .far.fa-heart {
-  font-size: 24px; /* Assegna una dimensione alle icone */
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-}
+        .like-button .fas.fa-heart,
+        .like-button .far.fa-heart {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+
         .follow-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-}
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
 
-.follow-button .fa-check {
-    color: green;
-}
+        .follow-button .fa-check {
+            color: green;
+        }
 
-.btn-outline-danger {
-    margin-left: 20px;
-}
+        .btn-outline-danger {
+            margin-left: 20px;
+        }
 
-.follow-button:hover {
-    background-color: #e6e7e8; !important
-}
+        .follow-button:hover {
+            background-color: #e6e7e8 !important;
+        }
     </style>
 </head>
 <body>
@@ -123,9 +123,6 @@
         <div class="row mb-4 align-items-center justify-content-between">
         <div class="col">
             <h2 class="mb-0">My likes</h2>
-        </div>
-        <div class="col-auto">
-            <a type="button" class="btn btn-light" href="/">Home</a>
         </div>
     </div>
         {% if liked_recipes %}
@@ -183,8 +180,10 @@
             <p class="mt-4">Non hai ancora creato nessuna ricetta.</p>
         {% endif %}
     </div>
-
 </main>
+<footer style="text-align: center; padding: 20px;">
+    <a type="button" class="btn btn-light" href="/">Home</a>
+</footer>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.like-button').forEach(button => {
@@ -233,9 +232,9 @@
                         icon.classList.toggle('fa-check', !isFollowing);
                         icon.classList.toggle('fa-plus', isFollowing);
                         if (isFollowing) {
-                            icon.style.color = '#f44336';  // Cambia il colore a rosso
+                            icon.style.color = '#f44336';
                         } else {
-                            icon.style.color = '';  // Rimuove qualsiasi stile di colore
+                            icon.style.color = '';
                         }
                     });
                 }
@@ -259,7 +258,5 @@ function getCookie(name) {
     return cookieValue;
 }
 </script>
-
-
 </body>
 </html>

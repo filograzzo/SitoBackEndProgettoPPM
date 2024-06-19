@@ -77,6 +77,9 @@
         .follow-button:hover {
             background-color: #e6e7e8 !important;
         }
+        .btn-light {
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
@@ -157,6 +160,9 @@
         {% endif %}
     </div>
 </main>
+<footer style="text-align: center; padding: 20px;">
+    <a type="button" class="btn btn-light" href="/">Home</a>
+</footer>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.like-button').forEach(button => {

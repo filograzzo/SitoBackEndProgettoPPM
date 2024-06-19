@@ -78,6 +78,9 @@
             font-size: 0.9em;
             color: #666;
         }
+        .btn-light {
+            border: 1px solid black;
+        }
     </style>
 </head>
 <body>
@@ -101,6 +104,9 @@
         {% endfor %}
     </div>
 </main>
+<footer style="text-align: center; padding: 20px;">
+    <a type="button" class="btn btn-light" href="/">Home</a>
+</footer>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.follow-button').forEach(button => {
