@@ -78,6 +78,7 @@ class Recipes(ListView):
                 queryset = queryset.filter(category=category)
         return queryset
 
+
 class LikedRecipes(ListView):
     """View all liked recipes"""
     template_name = 'pages/my-likes.html'
@@ -86,6 +87,12 @@ class LikedRecipes(ListView):
 
     def get_queryset(self):
         return Recipe.objects.filter(likes=self.request.user)
+
+
+def user_profile(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    recipes = Recipe.objects.filter(user=user)
+    return render(request, 'pages/user-profile.html', {'user': user, 'recipes': recipes})
 
 
 def recipe_search(request):
@@ -102,6 +109,7 @@ def recipe_search(request):
         recipes = Recipe.objects.all().annotate(num_likes=Count('likes'))
     return render(request, 'pages/index.html', {'recipes': recipes})
 
+
 @login_required(login_url="my-login")
 def dashboard(request):
     return render(request, 'pages/dashboard.html')
@@ -117,13 +125,6 @@ def my_profile(request):
     else:
         form = UpdateProfileForm(instance=request.user)
     return render(request, 'pages/my-profile.html', {'form': form})
-
-
-@login_required
-def user_profile(request, user_id):
-    user = get_object_or_404(CustomUser, id=user_id)
-    recipes = Recipe.objects.filter(user=user)
-    return render(request, 'pages/user-profile.html', {'user': user, 'recipes': recipes})
 
 
 @login_required
