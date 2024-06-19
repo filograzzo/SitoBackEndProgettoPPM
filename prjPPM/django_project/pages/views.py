@@ -70,6 +70,16 @@ class Recipes(ListView):
         return Recipe.objects.all()
 
 
+class LikedRecipes(ListView):
+    """View all liked recipes"""
+    template_name = 'pages/my-likes.html'
+    model = Recipe
+    context_object_name = 'liked_recipes'
+
+    def get_queryset(self):
+        return Recipe.objects.filter(likes=self.request.user)
+
+
 @login_required(login_url="my-login")
 def dashboard(request):
     return render(request, 'pages/dashboard.html')

@@ -15,6 +15,7 @@ urlpatterns = [
     path('edit-recipe/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
     path('like-recipe/<int:recipe_id>/', views.like_recipe, name='like-recipe'),
     path('search/', views.recipe_search, name='recipe_search'),
+    path('my-likes/', views.LikedRecipes.as_view(), name='my-likes'),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="https://bootswatch.com/5/journal/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            width: 100%;
+        }
+
+        main {
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+
+
+        .btn-primary, .btn-danger {
+            margin-top: 20px;
+        }
+
+        .btn-light {
+            border: 1px solid black;
+        }
+
+        .card {
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-class {
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-picture-container {
+            height: 100%; /* Altezza massima per occupare tutto lo spazio disponibile */
+            display: flex;
+            justify-content: center; /* Centra orizzontalmente */
+            /*align-items: center;  Centra verticalmente */
+            margin-top:0px;
+        }
+        .recipe-image {
+    width: 75%; /* Occupa tutta la larghezza disponibile */
+    height: auto; /* Altezza fissa, puoi modificare il valore a tuo piacimento */
+}
+        .like-button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.like-button .fas.fa-heart {
+  color: red;
+}
+
+.like-button .far.fa-heart {
+  color: grey;
+}
+
+.like-button .fas.fa-heart,
+.like-button .far.fa-heart {
+  font-size: 24px; /* Assegna una dimensione alle icone */
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+    </style>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">DA NONNA PAOLA</a>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="recipes-section" style="margin-bottom:20px; margin-top: 30px;">
+        <div class="row mb-4 align-items-center justify-content-between">
+        <div class="col">
+            <h2 class="mb-0">My likes</h2>
+        </div>
+        <div class="col-auto">
+            <a type="button" class="btn btn-light" href="/">Home</a>
+        </div>
+    </div>
+        {% if liked_recipes %}
+            <div class="row row-cols-1 g-4">
+                {% for recipe in liked_recipes %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="row g-0">
+                                <div class="col-md-4" >
+                                    <div class="profile-picture-container d-flex justify-content-center align-items-center">
+                                        <img src="{{ recipe.image.url }}" class="img-fluid rounded-start recipe-image" alt="{{ recipe.title }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                        <h5 class="card-title">{{ recipe.title }}</h5>
+                                        <button class="like-button" data-recipe-id="{{ recipe.id }}">
+                                            {% if user in recipe.likes.all %}
+                                                <i class="fas fa-heart liked"></i>
+                                            {% else %}
+                                                <i class="far fa-heart"></i>
+                                            {% endif %}
+                                        </button>
+                                    </div>
+                                        <p class="card-text">Tempo di preparazione: {{ recipe.preparation_time }} minuti</p>
+                                        <h6>Descrizione:</h6>
+                                        <p>{{ recipe.description }}</p>
+                                        <h6 class="mt-4">Ingredienti:</h6>
+                                        <p>{{ recipe.ingredients }}</p>
+                                        <h6 class="mt-4">Preparazione:</h6>
+                                        <p>{{ recipe.preparation }}</p>
+                                        <div class="author-name">
+                                        <p><strong>Autore:</strong> {{ recipe.user }}</p>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mt-4">Non hai ancora creato nessuna ricetta.</p>
+        {% endif %}
+    </div>
+
+</main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const recipeId = this.getAttribute('data-recipe-id');
+            const icon = this.querySelector('i');
+            const isLiked = icon.classList.contains('liked');
+
+            fetch(`/like-recipe/${recipeId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ liked: !isLiked })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    icon.classList.toggle('liked', !isLiked);
+                    icon.classList.toggle('fas', !isLiked);
+                    icon.classList.toggle('far', isLiked);
+                }
+            });
+        });
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+
+</body>
+</html>

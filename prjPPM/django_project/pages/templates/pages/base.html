@@ -76,15 +76,11 @@ footer .social-media img {
             <span class="visually-hidden">(current)</span>
           </a>
         </li>
+          {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="#">Categorie</a>
+          <a class="nav-link" href="my-likes">My likes</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">In Evidenza</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Utime Ricette</a>
-        </li>
+        {% endif %}
       </ul>
         <ul class="navbar-nav ms-auto">
     {% if user.is_authenticated %}
