@@ -178,6 +178,15 @@ footer .social-media img {
     background-color: #e6e7e8; !important
 }
 
+            .nome-utente a {
+        color: black; /* Colore normale del testo */
+        text-decoration: none; /* Rimuove il sottolineato predefinito */
+    }
+
+    .nome-utente a:hover {
+    text-decoration:underline;
+    }
+
 
     </style>
 </head>
@@ -283,8 +292,8 @@ footer .social-media img {
                                     <p>{{ recipe.preparation }}</p>
                                     <div class="author-name d-flex align-items-center">
                                     <div class="nome-utente" style="transform: translateY(+5%); position: relative;">
-                                        Autore: <a  href="{% url 'user-profile' user_id=recipe.user.id %}" style="color: black; text-decoration: none;">{{ recipe.user.username }}</a>
-                                    </div>
+    Autore: <a href="{% url 'user-profile' user_id=recipe.user.id %}" class="text-dark">{{ recipe.user.username }}</a>
+</div>
                                          <button class="follow-button btn btn-outline-primary ms-2" data-user-id="{{ recipe.user.id }}" data-author-id="{{ recipe.user.id }}">
                                             {% if request.user in recipe.user.followers.all %}
                                                 <i class="fas fa-check"></i>
