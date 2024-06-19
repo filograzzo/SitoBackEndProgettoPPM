@@ -1,8 +1,10 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CreateUserForm, LoginForm, UpdateProfileForm, RecipeCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Recipe
+from django.views.generic import ListView
 
 # - Authentcation models and functions
 
@@ -58,6 +60,16 @@ def user_logout(request):
     return redirect("")
 
 
+class Recipes(ListView):
+    """View all recipes"""
+    template_name = 'pages/index.html'
+    model = Recipe
+    context_object_name = 'recipes'
+
+    def get_queryset(self):
+        return Recipe.objects.all()
+
+
 @login_required(login_url="my-login")
 def dashboard(request):
     return render(request, 'pages/dashboard.html')
@@ -78,7 +90,8 @@ def my_profile(request):
 @login_required
 def recipe_creation(request):
     if request.method == 'POST':
-        form = RecipeCreateForm(request.POST, request.FILES)  # Passa anche request.FILES per gestire l'upload dell'immagine
+        form = RecipeCreateForm(request.POST,
+                                request.FILES)  # Passa anche request.FILES per gestire l'upload dell'immagine
         if form.is_valid():
             new_recipe = form.save(commit=False)
             new_recipe.user = request.user
@@ -90,7 +103,6 @@ def recipe_creation(request):
     context = {'form': form}
     template = 'pages/recipe-creation.html'
     return render(request, template, context)
-
 
 
 @login_required
@@ -136,3 +148,26 @@ def edit_recipe(request, recipe_id):
         # Se l'utente non è autorizzato, puoi reindirizzarlo o mostrare un messaggio di errore
         # In questo caso, reindirizziamo alla pagina di profilo
         return redirect('my-profile')
+
+
+def recipe_search(request):
+    query = request.GET.get('q')
+    if query:
+        recipes = Recipe.objects.filter(title__icontains=query)
+    else:
+        recipes = Recipe.objects.all()
+    return render(request, 'pages/index.html', {'recipes': recipes})
+
+
+@login_required
+def like_recipe(request, recipe_id):
+    if request.method == 'POST':
+        recipe = Recipe.objects.get(id=recipe_id)
+        if request.user in recipe.likes.all():
+            recipe.likes.remove(request.user)
+            liked = False
+        else:
+            recipe.likes.add(request.user)
+            liked = True
+        return JsonResponse({'success': True, 'liked': liked})
+    return JsonResponse({'success': False})

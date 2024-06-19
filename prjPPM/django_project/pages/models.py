@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 from django.conf import settings
 
 
@@ -20,6 +20,8 @@ class Recipe(models.Model):
     preparation = models.TextField("Preparation")
     preparation_time = models.IntegerField("Preparation Time (minutes)", default=0)
     created = models.DateField(auto_now_add=True, db_index=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_recipes', blank=True)
+    objects = models.Manager()
 
     def __str__(self):
         return self.title

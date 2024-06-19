@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("", views.homePageView, name=""),
+    path("", views.Recipes.as_view(), name=""),
     path("register", views.register, name="register"),
     path("my-login", views.my_login, name="my-login"),
     path("dashboard", views.dashboard, name="dashboard"),
@@ -13,6 +13,8 @@ urlpatterns = [
     path("recipe-creation", views.recipe_creation, name="recipe-creation"),
     path('delete-recipe/<int:recipe_id>/', views.delete_recipe, name='delete_recipe'),
     path('edit-recipe/<int:recipe_id>/', views.edit_recipe, name='edit_recipe'),
+    path('like-recipe/<int:recipe_id>/', views.like_recipe, name='like-recipe'),
+    path('search/', views.recipe_search, name='recipe_search'),
 ]
 
 if settings.DEBUG:
