@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profilo Utente</title>
     <link rel="stylesheet" href="https://bootswatch.com/5/journal/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         .profile-page {
             width: 100%;
@@ -15,7 +14,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .profile-info {
             max-width: 700px;
             width: 100%;
@@ -26,7 +24,6 @@
             background-color: #f9f9f9;
             text-align: center;
         }
-
         .profile-picture {
             width: 200px;
             height: 200px;
@@ -34,45 +31,52 @@
             object-fit: cover;
             margin-bottom: 20px;
         }
-
         .card {
             background-color: #f9f9f9;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         .profile-picture-container {
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
-
         .recipe-image {
             width: 75%;
             height: auto;
         }
-
         .like-button {
-  background: none;
-  border: none;
-  outline: none;
-  cursor: pointer;
-}
-
-.like-button .fas.fa-heart {
-  color: red;
-}
-
-.like-button .far.fa-heart {
-  color: grey;
-}
-
-.like-button .fas.fa-heart,
-.like-button .far.fa-heart {
-  font-size: 24px; /* Assegna una dimensione alle icone */
-  width: 24px;
-  height: 24px;
-  display: inline-block;
-}
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+        .like-button .fas.fa-heart {
+            color: red;
+        }
+        .like-button .far.fa-heart {
+            color: grey;
+        }
+        .like-button .fas.fa-heart,
+        .like-button .far.fa-heart {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+        }
+        .follow-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .follow-button .fa-check {
+            color: green;
+        }
+        .btn-outline-danger {
+            margin-left: 20px;
+        }
+        .follow-button:hover {
+            background-color: #e6e7e8 !important;
+        }
     </style>
 </head>
 <body>
@@ -95,12 +99,17 @@
             <p><strong>Nome:</strong> {{ user.first_name }}</p>
             <p><strong>Cognome:</strong> {{ user.last_name }}</p>
             <p><strong>Bio:</strong> {{ user.bio }}</p>
+            <button class="follow-button btn btn-outline-primary ms-2" data-user-id="{{ user.id }}" data-author-id="{{ user.id }}">
+                {% if request.user in user.followers.all %}
+                    <i class="fas fa-check"></i>
+                {% else %}
+                    <i class="fas fa-plus" style="color: #f44336;"></i>
+                {% endif %}
+            </button>
         </div>
     </div>
-
     <div class="recipes-section" style="margin-bottom:30px; padding-left:10%; padding-right:10%;">
         <h2 class="mb-4">Le ricette di {{ user.first_name }}</h2>
-
         {% if recipes %}
         <div class="row row-cols-1 g-4">
             {% for recipe in recipes %}
