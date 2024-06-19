@@ -10,8 +10,15 @@ class CustomUser(AbstractUser):
     friends = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
 
-    # - Modello per la creazione di una ricetta
+# - Modello per la creazione di una ricetta
 class Recipe(models.Model):
+    CATEGORY_CHOICES = [
+        ('ANTIPASTI', 'Antipasti'),
+        ('PRIMI', 'Primi'),
+        ('SECONDI', 'Secondi'),
+        ('DOLCI', 'Dolci')
+    ]
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='recipes_created', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=200, blank=True)
@@ -22,6 +29,7 @@ class Recipe(models.Model):
     preparation_time = models.IntegerField("Preparation Time (minutes)", default=0)
     created = models.DateField(auto_now_add=True, db_index=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_recipes', blank=True)
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default='PRIMI')
     objects = models.Manager()
 
     def __str__(self):

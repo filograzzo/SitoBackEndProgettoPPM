@@ -41,7 +41,7 @@ class LoginForm(AuthenticationForm):
 class RecipeCreateForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['image', 'title', 'description', 'ingredients', 'preparation', 'preparation_time']
+        fields = ['image', 'title', 'description', 'ingredients', 'preparation', 'preparation_time', 'category']
         widgets = {
             'title': forms.Textarea(attrs={
                 'placeholder': 'Inserisci il titolo',

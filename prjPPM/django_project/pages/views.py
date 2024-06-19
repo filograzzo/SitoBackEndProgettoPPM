@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db import models
+from django.db.models import Count
 from .forms import CreateUserForm, LoginForm, UpdateProfileForm, RecipeCreateForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -63,14 +64,19 @@ def user_logout(request):
 
 
 class Recipes(ListView):
-    """View all recipes"""
     template_name = 'pages/index.html'
     model = Recipe
     context_object_name = 'recipes'
 
     def get_queryset(self):
-        return Recipe.objects.all()
-
+        queryset = Recipe.objects.all().annotate(num_likes=Count('likes'))
+        category = self.request.GET.get('category')
+        if category:
+            if category == 'Più likes':
+                queryset = queryset.order_by('-num_likes')
+            else:
+                queryset = queryset.filter(category=category)
+        return queryset
 
 class LikedRecipes(ListView):
     """View all liked recipes"""
@@ -84,12 +90,17 @@ class LikedRecipes(ListView):
 
 def recipe_search(request):
     query = request.GET.get('q')
+    category = request.GET.get('category')
     if query:
-        recipes = Recipe.objects.filter(title__icontains=query)
+        recipes = Recipe.objects.filter(title__icontains=query).annotate(num_likes=Count('likes'))
+    elif category:
+        if category == 'Più likes':
+            recipes = Recipe.objects.annotate(num_likes=Count('likes')).order_by('-num_likes')
+        else:
+            recipes = Recipe.objects.filter(category=category).annotate(num_likes=Count('likes'))
     else:
-        recipes = Recipe.objects.all()
+        recipes = Recipe.objects.all().annotate(num_likes=Count('likes'))
     return render(request, 'pages/index.html', {'recipes': recipes})
-
 
 @login_required(login_url="my-login")
 def dashboard(request):
@@ -189,7 +200,8 @@ def like_recipe(request, recipe_id):
         else:
             recipe.likes.add(request.user)
             liked = True
-        return JsonResponse({'success': True, 'liked': liked})
+        num_likes = recipe.likes.count()  # Numero aggiornato di like
+        return JsonResponse({'success': True, 'liked': liked, 'num_likes': num_likes})
     return JsonResponse({'success': False}, status=400)
 
 
