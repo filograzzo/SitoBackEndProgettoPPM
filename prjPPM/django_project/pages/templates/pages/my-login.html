@@ -32,7 +32,6 @@
             align-items: center;
         }
 
-        /* Stile per la pagina di login */
         .login-page {
             display: flex;
             justify-content: center;
@@ -41,29 +40,40 @@
             width: 100%;
         }
 
-        /* Stile per il form di login */
         .login-form {
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #f9f9f9;
-            text-align: center; /* Centra il testo all'interno del form */
+            text-align: center;
         }
 
-        /* Stile per il titolo */
         .login-form h1 {
-            margin-bottom: 20px; /* Aggiungi margine inferiore per separare dal form */
+            margin-bottom: 20px;
         }
-        .btn-light{
+
+        .btn-light {
             border: 1px solid black;
+        }
+
+        .register-link {
+            margin-top: 20px;
+            display: block;
+            text-decoration:none;
+            color:black;
+        }
+
+        .register-link:hover{
+            text-decoration:underline;
+            color:#f44336;
         }
     </style>
 </head>
 <body>
 <header>
     <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-        <div class="container-fluid" >
+        <div class="container-fluid">
             <a class="navbar-brand" href="/" style="font-size: 24px; text-align: center; margin-left:10%;">DA NONNA PAOLA</a>
         </div>
     </nav>
@@ -73,15 +83,16 @@
         <div class="login-form">
             <h1>Log in now!</h1>
             {% if messages %}
-        <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <form method="POST" autocomplete="off">
                 {% csrf_token %}
                 {{loginform.as_p}}
+                <a href="{% url 'register' %}" class="register-link" style="margin-bottom: 10px;">Non sei ancora registrato? Registrati!</a>
                 <input class="btn btn-primary" type="submit" value="Login"/>
                 <a type="button" class="btn btn-light" href="/">Home</a>
             </form>

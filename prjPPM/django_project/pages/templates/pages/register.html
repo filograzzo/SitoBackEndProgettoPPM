@@ -92,6 +92,18 @@
             margin-top:20px;
             border: 1px solid black;
         }
+
+        .login-link {
+            margin-top: 20px;
+            display: block;
+            text-decoration:none;
+            color:black;
+        }
+
+        .login-link:hover{
+            text-decoration:underline;
+            color:#f44336;
+        }
     </style>
 </head>
 <body>
@@ -109,6 +121,7 @@
             <form method="POST" autocomplete="off">
                 {% csrf_token %}
                 {{ registerform.as_p }}
+                <a href="{% url 'my-login' %}" class="login-link" style="margin-bottom: 10px;">Sei già registrato? Accedi!</a>
                 <input style="background-color: #EB6864;" type="submit" value="Register"/>
                 <a type="button" class="btn btn-light" href="/">Home</a>
 
