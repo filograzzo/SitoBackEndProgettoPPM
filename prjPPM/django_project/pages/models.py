@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     friends = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
 
-# - Modello per la creazione di una ricetta
+    # - Modello per la creazione di una ricetta
 class Recipe(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='recipes_created', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
