@@ -117,7 +117,7 @@
 <main>
     <div class="profile-page">
         <div class="profile-form">
-            <h1>Edit Profile</h1>
+            <h1>Modifica il tuo profilo</h1>
             {% load static %}
 
             {% if request.user.profile_picture %}
@@ -125,7 +125,7 @@
                     <img id="current-profile-picture" class="profile-picture" src="{{ request.user.profile_picture.url }}" alt="Profile Picture">
                 </a>
             {% else %}
-                <p>No profile picture uploaded yet.</p>
+                <p>Non hai messo ancora nessuna foto profilo.</p>
             {% endif %}
 
             <div class="profile-class">
@@ -135,7 +135,7 @@
             <form method="POST" autocomplete="off" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input class="btn btn-primary" type="submit" value="Save Changes">
+                <input class="btn btn-primary" type="submit" value="Salva">
                 <a type="button" class="btn btn-light" href="/">Home</a>
             </form>
         </div>
@@ -160,14 +160,20 @@
                                     <div class="card-body">
                                         <h4 class="card-title">{{ recipe.title }}</h4>
                                         <p class="card-text"><strong>Tempo di preparazione:</strong> {{ recipe.preparation_time }} minuti</p>
-                                <p class="card-text"><strong>Categoria:</strong> {{ recipe.get_category_display }}</p>
-                                <p><strong>Descrizione:</strong></p>
-                                <p>{{ recipe.description }}</p>
-                                <p><strong>Ingredienti:</strong></p>
-                                <p>{{ recipe.ingredients }}</p>
-                                <p><strong>Preparazione:</strong></p>
-                                <p>{{ recipe.preparation }}</p>
-
+                                        <p class="card-text"><strong>Categoria:</strong> {{ recipe.get_category_display }}</p>
+                                        <p><strong>Descrizione:</strong></p>
+                                        <p>{{ recipe.description }}</p>
+                                        <p><strong>Ingredienti:</strong></p>
+                                        <p>{{ recipe.ingredients }}</p>
+                                        <p><strong>Preparazione:</strong></p>
+                                        <p>{{ recipe.preparation }}</p>
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}">Modifica</a>
+                                            <form method="POST" action="{% url 'delete_recipe' recipe.id %}">
+                                                {% csrf_token %}
+                                                <input class="btn btn-danger" type="submit" value="Elimina" style="border-top-left-radius:0; border-bottom-left-radius:0;">
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
