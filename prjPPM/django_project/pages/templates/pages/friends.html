@@ -95,7 +95,7 @@
             <div class="friend">
                 <img src="{{ friend.profile_picture.url }}" alt="{{ friend.username }}" width="50" height="50">
                 <div class="friend-info">
-                    <a href="#">{{ friend.username }}</a>
+                    <a href="{% url 'user-profile' user_id=friend.id %}">{{ friend.username }}</a>
                 </div>
             </div>
         {% endfor %}

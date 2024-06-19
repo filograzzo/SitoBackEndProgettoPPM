@@ -107,6 +107,12 @@ def my_profile(request):
 
 
 @login_required
+def user_profile(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    recipes = Recipe.objects.filter(user=user)
+    return render(request, 'pages/user-profile.html', {'user': user, 'recipes': recipes})
+
+@login_required
 def recipe_creation(request):
     if request.method == 'POST':
         form = RecipeCreateForm(request.POST,
