@@ -91,6 +91,23 @@
   height: 24px;
   display: inline-block;
 }
+        .follow-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.follow-button .fa-check {
+    color: green;
+}
+
+.btn-outline-danger {
+    margin-left: 20px;
+}
+
+.follow-button:hover {
+    background-color: #e6e7e8; !important
+}
     </style>
 </head>
 <body>
@@ -125,7 +142,7 @@
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <div class="d-flex justify-content-between">
-                                        <h5 class="card-title">{{ recipe.title }}</h5>
+                                        <h4 class="card-title">{{ recipe.title }}</h4>
                                         <button class="like-button" data-recipe-id="{{ recipe.id }}">
                                             {% if user in recipe.likes.all %}
                                                 <i class="fas fa-heart liked"></i>
@@ -142,7 +159,18 @@
                                         <h6 class="mt-4">Preparazione:</h6>
                                         <p>{{ recipe.preparation }}</p>
                                         <div class="author-name">
-                                        <p><strong>Autore:</strong> {{ recipe.user }}</p>
+                                        <div class="author-name d-flex align-items-center">
+                                    <div style="transform: translateY(+5%); position: relative;">
+                                        Autore: {{ recipe.user }}
+                                    </div>
+                                         <button class="follow-button btn btn-outline-primary ms-2" data-user-id="{{ recipe.user.id }}" data-author-id="{{ recipe.user.id }}">
+                                            {% if request.user in recipe.user.followers.all %}
+                                                <i class="fas fa-check"></i>
+                                            {% else %}
+                                                <i class="fas fa-plus" style="color: #f44336;"></i>
+                                            {% endif %}
+                                        </button>
+                                    </div>
                                     </div>
                                     </div>
                                 </div>
@@ -179,6 +207,37 @@
                     icon.classList.toggle('liked', !isLiked);
                     icon.classList.toggle('fas', !isLiked);
                     icon.classList.toggle('far', isLiked);
+                }
+            });
+        });
+    });
+
+    document.querySelectorAll('.follow-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            const authorId = this.getAttribute('data-author-id');
+            const isFollowing = this.querySelector('i').classList.contains('fa-check');
+
+            fetch(`/follow-user/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelectorAll(`.follow-button[data-author-id="${authorId}"]`).forEach(followButton => {
+                        const icon = followButton.querySelector('i');
+                        icon.classList.toggle('fa-check', !isFollowing);
+                        icon.classList.toggle('fa-plus', isFollowing);
+                        if (isFollowing) {
+                            icon.style.color = '#f44336';  // Cambia il colore a rosso
+                        } else {
+                            icon.style.color = '';  // Rimuove qualsiasi stile di colore
+                        }
+                    });
                 }
             });
         });
