@@ -98,15 +98,24 @@ def user_profile(request, user_id):
 def recipe_search(request):
     query = request.GET.get('q')
     category = request.GET.get('category')
+
+    # Start with all recipes
+    recipes = Recipe.objects.all()
+
+    # Filter by title if query is provided
     if query:
-        recipes = Recipe.objects.filter(title__icontains=query).annotate(num_likes=Count('likes'))
-    elif category:
+        recipes = recipes.filter(title__icontains=query)
+
+    # Filter by category if category is provided
+    if category:
         if category == 'Più likes':
-            recipes = Recipe.objects.annotate(num_likes=Count('likes')).order_by('-num_likes')
+            recipes = recipes.annotate(num_likes=Count('likes')).order_by('-num_likes')
         else:
-            recipes = Recipe.objects.filter(category=category).annotate(num_likes=Count('likes'))
-    else:
-        recipes = Recipe.objects.all().annotate(num_likes=Count('likes'))
+            recipes = recipes.filter(category=category)
+
+    # Annotate with number of likes
+    recipes = recipes.annotate(num_likes=Count('likes'))
+
     return render(request, 'pages/index.html', {'recipes': recipes})
 
 
