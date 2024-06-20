@@ -94,16 +94,15 @@
         }
 
         .profile-picture-container {
-            height: 100%; /* Altezza massima per occupare tutto lo spazio disponibile */
+            height: 100%;
             display: flex;
-            justify-content: center; /* Centra orizzontalmente */
-            /*align-items: center;  Centra verticalmente */
+            justify-content: center;
             margin-top:0px;
         }
         .recipe-image {
-    width: 75%; /* Occupa tutta la larghezza disponibile */
-    height: auto; /* Altezza fissa, puoi modificare il valore a tuo piacimento */
-}
+            width: 75%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -148,10 +147,10 @@
         {% if request.user.recipes_created.all %}
             <div class="row row-cols-1 g-4">
                 {% for recipe in request.user.recipes_created.all %}
-                    <div class="col">
+                    <div class="col" id="recipe-{{ recipe.id }}">
                         <div class="card">
                             <div class="row g-0">
-                                <div class="col-md-4" >
+                                <div class="col-md-4">
                                     <div class="profile-picture-container d-flex justify-content-center align-items-center">
                                         <img src="{{ recipe.image.url }}" class="img-fluid rounded-start recipe-image" alt="{{ recipe.title }}">
                                     </div>
@@ -169,10 +168,7 @@
                                         <p>{{ recipe.preparation }}</p>
                                         <div class="btn-group" role="group">
                                             <a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}">Modifica</a>
-                                            <form method="POST" action="{% url 'delete_recipe' recipe.id %}">
-                                                {% csrf_token %}
-                                                <input class="btn btn-danger" type="submit" value="Elimina" style="border-top-left-radius:0; border-bottom-left-radius:0;">
-                                            </form>
+                                            <button class="btn btn-danger delete-recipe-btn" data-id="{{ recipe.id }}" style="border-top-left-radius:0; border-bottom-left-radius:0;">Elimina</button>
                                         </div>
                                     </div>
                                 </div>
@@ -187,6 +183,7 @@
     </div>
 
 </main>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     document.getElementById('id_profile_picture').addEventListener('change', function(event) {
         const file = event.target.files[0];
@@ -207,7 +204,33 @@
             reader.readAsDataURL(file);
         }
     });
-</script>
 
+    $(document).ready(function() {
+        $('.delete-recipe-btn').click(function(e) {
+            e.preventDefault();
+
+            var recipeId = $(this).data('id');
+            var url = '{% url "delete_recipe" 0 %}'.replace('/0/', '/' + recipeId + '/');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#recipe-' + recipeId).remove();
+                    } else {
+                        alert('Failed to delete the recipe.');
+                    }
+                },
+                error: function(response) {
+                    alert('Failed to delete the recipe.');
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

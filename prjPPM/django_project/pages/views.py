@@ -158,19 +158,14 @@ def recipe_creation(request):
 def delete_recipe(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
 
-    # Verifica se l'utente che sta cercando di eliminare la ricetta è anche il creatore della ricetta
     if request.user == recipe.user:
         if request.method == 'POST':
             recipe.delete()
-            return redirect('my-profile')  # Reindirizza dopo l'eliminazione della ricetta
+            return JsonResponse({'success': True})
 
-        # Se non è una richiesta POST, potresti anche gestire un altro comportamento (ad esempio un messaggio di errore)
-        # Ma normalmente non dovrebbe accadere se il form è correttamente configurato
-        return redirect('my-profile')
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=400)
     else:
-        # Se l'utente non è autorizzato, puoi reindirizzarlo o mostrare un messaggio di errore
-        # In questo caso, reindirizziamo alla pagina di profilo
-        return redirect('my-profile')
+        return JsonResponse({'error': 'Unauthorized'}, status=403)
 
 
 @login_required
